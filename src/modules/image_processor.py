@@ -1,14 +1,13 @@
 from PIL import ImageGrab, ImageFilter, ImageTk, Image
-
-TMP_PATH = "/tmp"
-
-def process_image():
-    screenshot = ImageGrab.grab()
-    screenshot.load()
-    blur_image = screenshot.filter(ImageFilter.GaussianBlur(5))
-    screenshot.save(TMP_PATH + "/raw_ss.png")
-    blur_image.save(TMP_PATH + "/temp_ss.png")
+from customtkinter import CTkImage
 
 def get_image():
-    img = Image.open(TMP_PATH + "/temp_ss.png")
-    return ImageTk.PhotoImage(img)
+    screenshot = ImageGrab.grab()
+    blured_image = screenshot.filter(ImageFilter.GaussianBlur(5))
+
+    size = blured_image.size
+    raw_image_bytes = screenshot.tobytes()
+    blur_image_bytes = blured_image.tobytes()
+
+    img = Image.frombytes(mode="RGB", size=size, data=blur_image_bytes)
+    return CTkImage(img, size=size)
