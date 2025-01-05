@@ -48,8 +48,10 @@ def search_password(website, username):
         clipboard_stack(username, output)
         return True, "OTP Pass Copied"
 
+
 def clipboard_stack(username, password):
     pass
+
 
 def generate_random_password():
     alphabet = string.ascii_letters + string.digits
