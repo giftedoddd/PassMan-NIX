@@ -1,5 +1,5 @@
+import json, pyotp, secrets, string, subprocess
 from pathlib import Path
-import json, pyotp, secrets, string
 
 DATA_PATH = Path("/home/giftedodd/IdeaProjects/Pycharm/PassMan-NIX/test/secure.enc")
 

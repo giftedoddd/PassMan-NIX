@@ -1,7 +1,7 @@
-from src.modules.qr_scanner import auto_detect
+from modules.qr_scanner import auto_detect
 import customtkinter as ctk
-from src.modules import core
-from src.modules import otp
+from modules import core
+from modules import otp
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("dark-blue")
@@ -25,7 +25,7 @@ class App(ctk.CTk):
         self.widgets["image_label"] = image_label
 
         website_entry = ctk.CTkEntry(master=self, width=700, height=70, border_width=2, corner_radius=0,
-                                     placeholder_text="Website:",font=("System", 22, "normal"), justify="center",
+                                     placeholder_text="Website:", font=("System", 22, "normal"), justify="center",
                                      fg_color="#393E46")
         website_entry.place(relx=0.37, rely=0.40)
         self.widgets["website_entry"] = website_entry
@@ -49,7 +49,7 @@ class App(ctk.CTk):
         self.widgets["qr_scan_button"] = qr_scan_button
 
         password_entry = ctk.CTkEntry(master=self, width=700, height=70, border_width=2, corner_radius=0,
-                                      placeholder_text="Password:",font=("System", 22, "normal"), justify="center",
+                                      placeholder_text="Password:", font=("System", 22, "normal"), justify="center",
                                       fg_color="#393E46")
         self.widgets["password_entry"] = password_entry
 
@@ -93,8 +93,7 @@ class App(ctk.CTk):
                     len(self.widgets["website_entry"].get()),
                     len(self.widgets["username_entry"].get()),
                     len(self.widgets["password_entry"].get())]
-                        ):
-
+                ):
                     core.create_password(
                         website=self.widgets["website_entry"].get(),
                         username=self.widgets["username_entry"].get(),
@@ -104,9 +103,11 @@ class App(ctk.CTk):
                     reset_widgets()
 
         def search_password():
+            website = self.widgets["website_entry"].get()
+            username = self.widgets["username_entry"].get()
             result, err_type = core.search_password(
-                website=self.widgets["website_entry"].get(),
-                username=self.widgets["username_entry"].get()
+                website=website,
+                username=username
             )
 
             if not result:
@@ -141,11 +142,10 @@ class App(ctk.CTk):
             condition = self.widgets["website_entry"].get() and self.widgets["username_entry"].get()
             if condition:
                 if all(
-                    [
-                    len(self.widgets["website_entry"].get()),
-                    len(self.widgets["username_entry"].get())
-                    ]):
-
+                        [
+                            len(self.widgets["website_entry"].get()),
+                            len(self.widgets["username_entry"].get())
+                        ]):
                     core.create_password(
                         website=self.widgets["website_entry"].get(),
                         username=self.widgets["username_entry"].get(),
@@ -157,6 +157,9 @@ class App(ctk.CTk):
             password = core.generate_random_password()
             self.widgets["password_entry"].delete(0, ctk.END)
             self.widgets["password_entry"].insert(0, password)
+
+        def clipboard_stack():
+            pass
 
         commands = {
             "create_password": create_password,
