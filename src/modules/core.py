@@ -35,18 +35,18 @@ def search_password(website, username):
             passwords_dict = json.load(password_list)
             is_otp = passwords_dict[website][username]["OTP"]
     except json.decoder.JSONDecodeError:
-        return False, "Create A Password First"
+        return False, None, "Create A Password First"
     except KeyError:
-        return False, "Username Not Found"
+        return False, None, "Username Not Found"
     else:
         if not is_otp:
             output = passwords_dict[website][username]["password"]
             clipboard_stack(username, output)
-            return True, "Password Copied"
+            return True, output, "Password Copied. See you later!"
         secret = passwords_dict[website][username]["password"]
         output = pyotp.TOTP(secret)
         clipboard_stack(username, output)
-        return True, "OTP Pass Copied"
+        return True, output, "OTP Pass Copied. See you later!"
 
 
 def clipboard_stack(username, password):
