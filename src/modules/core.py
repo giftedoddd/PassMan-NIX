@@ -1,4 +1,4 @@
-import json, pyotp, secrets, string, subprocess
+import json, pyotp, secrets, string
 from pathlib import Path
 
 DATA_PATH = Path("/home/giftedodd/IdeaProjects/Pycharm/PassMan-NIX/test/secure.enc")
@@ -41,16 +41,10 @@ def search_password(website, username):
     else:
         if not is_otp:
             output = passwords_dict[website][username]["password"]
-            clipboard_stack(username, output)
             return True, output, "Password Copied. See you later!"
         secret = passwords_dict[website][username]["password"]
-        output = pyotp.TOTP(secret)
-        clipboard_stack(username, output)
+        output = pyotp.TOTP(secret).now()
         return True, output, "OTP Pass Copied. See you later!"
-
-
-def clipboard_stack(username, password):
-    pass
 
 
 def generate_random_password():

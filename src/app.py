@@ -1,9 +1,8 @@
-import subprocess
-
 from modules.qr_scanner import auto_detect
 import customtkinter as ctk
 from modules import core
 from modules import otp
+import subprocess
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("dark-blue")
@@ -61,8 +60,8 @@ class App(ctk.CTk):
         username_entry.place(relx=0.37, rely=0.45)
         self.widgets["username_entry"] = username_entry
 
-        generate_button = ctk.CTkButton(master=self, text="Auto Generate", font=("System", 20, "normal"), width=150,
-                                        height=32, border_width=0,
+        generate_button = ctk.CTkButton(master=self, text="Auto Generate", font=("System", 20, "normal"), width=160,
+                                        height=45, border_width=0,
                                         command=lambda func_name="generate": self.events(func_name))
         self.widgets["generate_button"] = generate_button
 
@@ -122,13 +121,13 @@ class App(ctk.CTk):
                 self.widgets["hidden_err_frame"].place(relx=0.37, rely=0.40)
                 self.widgets["hidden_err_label"].place(relx=0.5, rely=0.5, anchor='center')
                 self.widgets["hidden_err_label"].configure(text=err_type)
-                self.after(2000, reset_widgets)
+                self.after(1500, reset_widgets)
                 return
 
             self.widgets["hidden_err_frame"].place(relx=0.37, rely=0.40)
             self.widgets["hidden_err_label"].place(relx=0.5, rely=0.5, anchor='center')
             self.widgets["hidden_err_label"].configure(text=err_type)
-            self.after(2000, lambda :self.copy(password))
+            self.after(1500, lambda: self.copy(password))
 
         def qr_scan():
             data = auto_detect()
@@ -136,14 +135,14 @@ class App(ctk.CTk):
                 self.widgets["hidden_err_frame"].place(relx=0.37, rely=0.40)
                 self.widgets["hidden_err_label"].place(relx=0.5, rely=0.5, anchor='center')
                 self.widgets["hidden_err_label"].configure(text="No QR Code detected!")
-                self.after(2000, reset_widgets)
+                self.after(1500, reset_widgets)
                 return
 
             if not otp.otp_match(data):
                 self.widgets["hidden_err_frame"].place(relx=0.37, rely=0.40)
                 self.widgets["hidden_err_label"].place(relx=0.5, rely=0.5, anchor='center')
                 self.widgets["hidden_err_label"].configure(text="Wrong QR Code")
-                self.after(2000, reset_widgets)
+                self.after(1500, reset_widgets)
                 return
 
             secret = otp.get_secret(data)
@@ -160,12 +159,12 @@ class App(ctk.CTk):
                         password=secret,
                         is_otp=True
                     )
+                    reset_widgets()
 
         def generate():
             password = core.generate_random_password()
             self.widgets["password_entry"].delete(0, ctk.END)
             self.widgets["password_entry"].insert(0, password)
-
 
         commands = {
             "create_password": create_password,
@@ -175,3 +174,4 @@ class App(ctk.CTk):
         }
 
         commands[function_name]()
+        return
