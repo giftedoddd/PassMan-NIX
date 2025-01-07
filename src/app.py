@@ -1,3 +1,5 @@
+import subprocess
+
 from modules.qr_scanner import auto_detect
 import customtkinter as ctk
 from modules import core
@@ -72,6 +74,12 @@ class App(ctk.CTk):
         self.widgets["hidden_err_frame"] = hidden_err_frame
         self.widgets["hidden_err_label"] = hidden_err_label
 
+    def copy(self, password):
+        subprocess.run(["xclip", "-selection", "clipboard", "-i", "/dev/null"])
+        process = subprocess.Popen(['xclip', '-selection', 'clipboard'], stdin=subprocess.PIPE)
+        process.communicate(input=password.encode('utf-8'))
+        self.destroy()
+
     def events(self, function_name):
         def reset_widgets():
             self.widgets["website_entry"].delete(0, ctk.END)
@@ -105,7 +113,7 @@ class App(ctk.CTk):
         def search_password():
             website = self.widgets["website_entry"].get()
             username = self.widgets["username_entry"].get()
-            result, err_type = core.search_password(
+            result, password, err_type = core.search_password(
                 website=website,
                 username=username
             )
@@ -120,7 +128,7 @@ class App(ctk.CTk):
             self.widgets["hidden_err_frame"].place(relx=0.37, rely=0.40)
             self.widgets["hidden_err_label"].place(relx=0.5, rely=0.5, anchor='center')
             self.widgets["hidden_err_label"].configure(text=err_type)
-            self.after(2000, reset_widgets)
+            self.after(2000, lambda :self.copy(password))
 
         def qr_scan():
             data = auto_detect()
@@ -158,8 +166,6 @@ class App(ctk.CTk):
             self.widgets["password_entry"].delete(0, ctk.END)
             self.widgets["password_entry"].insert(0, password)
 
-        def clipboard_stack():
-            pass
 
         commands = {
             "create_password": create_password,
